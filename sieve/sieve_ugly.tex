@@ -1,0 +1,46 @@
+\documentclass{article}
+\errorcontextlines 10000
+\usepackage{ifthen}
+\usepackage{forloop}
+\usepackage{intcalc}
+\usepackage{etoolbox}
+
+
+% http://tex.stackexchange.com/questions/37426/create-an-array-of-variables
+
+\newcommand\settext[2]{%
+  \csdef{text#1}{#2}}
+\newcommand\gettext[1]{%
+  \csuse{text#1}}
+
+\begin{document}
+
+\newcounter{i}
+\def \MAX {20}
+
+% Initialize sieve (0 == composite, 1 == prime/not marked)
+\forloop{i}{2}{\thei < \MAX}{
+    \settext{\thei}{1}
+}
+
+
+\newcounter{j}
+% loop over all primes p and mark their multiples
+\forloop{i}{2}{\thei < \MAX}{
+    \ifthenelse{ \equal{\gettext{\thei}}{1} }{
+        \forloop{j}{2}{\intcalcMul{\thej}{\thei} < \MAX}{
+            \settext{\intcalcMul{\thej}{\thei}}{0}
+        }
+        % mark all multiples of p
+    } { 
+        % else continue
+    }
+}
+
+\begin{itemize}
+    \forloop{i}{2}{\thei < \MAX}{
+        \item \arabic{i}: \gettext{\thei}
+    }
+\end{itemize}
+
+\end{document}

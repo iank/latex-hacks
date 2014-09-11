@@ -1,12 +1,21 @@
+% $ time pdflatex sieve.tex
+% real    0m1.412s
+% user    0m1.346s
+% sys     0m0.050s
+
+
 \documentclass{article}
 \errorcontextlines 10000
 \usepackage{ifthen}
 \usepackage{forloop}
 \usepackage{intcalc}
 \usepackage{etoolbox}
+\usepackage{amsmath}
+\usepackage{xcolor}
 
 
 % http://tex.stackexchange.com/questions/37426/create-an-array-of-variables
+% http://tex.stackexchange.com/questions/60585/how-to-highlight-a-single-element-in-a-matrix
 
 \newcommand\settext[2]{%
   \csdef{text#1}{#2}}
@@ -16,7 +25,10 @@
 \begin{document}
 
 \newcounter{i}
-\def \MAX {20}
+\newcounter{q}
+\newcounter{j}
+\def \MAX {100}
+\def \WRAP {10}
 
 % Initialize sieve (0 == composite, 1 == prime/not marked)
 \forloop{i}{2}{\thei < \MAX}{
@@ -24,23 +36,43 @@
 }
 
 
-\newcounter{j}
+
+\newcommand{\hlightP}[1]{%
+  \ooalign{\hss\makebox[0pt]{\fcolorbox{red!30}{green!40}{$#1$}}\hss\cr\phantom{$#1$}}%
+}
+\newcommand{\hlightC}[1]{%
+  \ooalign{\hss\makebox[0pt]{\fcolorbox{green!30}{red!40}{$#1$}}\hss\cr\phantom{$#1$}}%
+}
+\def\tand{&}
+
+\newcommand\printSieve{
+\begin{equation*}
+    \begin{pmatrix}
+        \tand \forloop{q}{2}{\theq < \MAX}{
+            \ifthenelse{\equal{\gettext{\theq}}{0}}{\hlightC{\arabic{q}}}{\hlightP{\arabic{q}}}
+            %\ifthenelse{\equal{\gettext{\theq}}{0}}{\arabic{q}}{\hlight{\arabic{q}}}
+            \ifthenelse{\equal{\intcalcMod{\theq}{\WRAP}}{0}}{ \\ } { \tand }
+        }
+
+    \end{pmatrix}
+\end{equation*}
+}
+
+\section{Blank sieve}
+\printSieve
+
 % loop over all primes p and mark their multiples
 \forloop{i}{2}{\thei < \MAX}{
     \ifthenelse{ \equal{\gettext{\thei}}{1} }{
+        \section{Marking multiples of p = \arabic{i}}
+        % mark all multiples of p
         \forloop{j}{2}{\intcalcMul{\thej}{\thei} < \MAX}{
             \settext{\intcalcMul{\thej}{\thei}}{0}
         }
-        % mark all multiples of p
+        \printSieve
     } { 
         % else continue
     }
 }
-
-\begin{itemize}
-    \forloop{i}{2}{\thei < \MAX}{
-        \item \arabic{i}: \gettext{\thei}
-    }
-\end{itemize}
 
 \end{document}
