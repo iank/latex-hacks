@@ -1,0 +1,35 @@
+\documentclass{article}
+\errorcontextlines 10000
+\usepackage{ifthen}
+\usepackage{forloop}
+\usepackage{intcalc}
+\usepackage{etoolbox}
+
+
+% http://tex.stackexchange.com/questions/37426/create-an-array-of-variables
+
+\newcommand\settext[2]{%
+  \csdef{text#1}{#2}}
+\newcommand\gettext[1]{%
+  \csuse{text#1}}
+
+\begin{document}
+
+\newcounter{i}
+\forloop{i}{2}{\thei < 20}{
+    % if even, else
+    \ifthenelse{\equal{\intcalcMod{\thei}{2}}{0}}{
+        \settext{\thei}{even}
+    }{
+        \settext{\thei}{odd}
+    }
+}
+
+
+\begin{itemize}
+    \forloop{i}{2}{\thei < 20}{
+        \item \arabic{i}: \gettext{\thei}
+    }
+\end{itemize}
+
+\end{document}
