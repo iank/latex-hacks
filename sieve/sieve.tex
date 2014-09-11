@@ -12,6 +12,7 @@
 \usepackage{etoolbox}
 \usepackage{amsmath}
 \usepackage{xcolor}
+\usepackage{url}
 
 
 % http://tex.stackexchange.com/questions/37426/create-an-array-of-variables
@@ -22,7 +23,26 @@
 \newcommand\gettext[1]{%
   \csuse{text#1}}
 
+
+\author{Ian Kilgore}
+\date{2014-09-11}
+\title{Programmatically-generated \LaTeX\:Sieve of Eratosthenes}
 \begin{document}
+
+\maketitle
+
+\section{Background}
+
+See \url{https://github.com/iank/latex-hacks/blob/master/sieve/sieve.tex} for source code. This \LaTeX code implements a \url{http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes} using:
+
+\begin{itemize}
+    \item \verb|\forloop| (package: forloop)
+    \item \verb|\ifthenelse| (package: ifthen)
+    \item package intcalc
+    \item An ``array'' constructed by using indices in macro names \url{http://tex.stackexchange.com/questions/37426/create-an-array-of-variables}.
+\end{itemize}
+
+
 
 \newcounter{i}
 \newcounter{q}
